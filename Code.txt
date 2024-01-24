@@ -1,0 +1,207 @@
+#include<stdio.h>
+#include<string.h>
+struct ticket{
+	char name[15];
+	int age;
+	char gender[10];
+	long long phone;
+	int PNR;
+	int status;
+}tick[10];
+
+void passdet(int num,int num1){
+	int i;
+	for(i=num1;i<num+num1;i++){
+		printf("Enter passenger %d name:",i+1-num1);
+		scanf("%s",tick[i].name);
+		printf("Enter passenger %d age:",i+1-num1);
+		scanf("%d",&tick[i].age);
+		printf("Enter passenger %d gender:",i+1-num1);
+		scanf("%s",tick[i].gender);
+		printf("Enter passenger %d phone:",i+1-num1);
+		scanf("%lld",&tick[i].phone);
+		tick[i].PNR=4000+i;
+	}
+		
+}
+void displaydet(int num,int num1,int buff){
+	int i;
+	for(i=num1;i<num+num1;i++){
+		printf("\n\tName: %s\tAge:%d\tGender:%s\tPhone:%lld",tick[i].name,tick[i].age,tick[i].gender,tick[i].phone);
+		if(buff){
+			printf("\tPNR number:%d",tick[i].PNR);
+			tick[i].status=1;
+		}
+	}
+	
+
+}
+int book(num1){
+	int num,conf;
+	char s[10],d[10];
+	int count,count_t=-1,check=0,cost;
+	int cost_det[10]={};
+	int det[10]={};
+	int train_n,i,j;
+
+	char train1[][20]={"|","bangalore","kunigal","hassan","sakleshpura","subramanya","mangalore","|","bangalore","kengeri","mandya","mysore","|","bangalore","kengeri","mysore","sakleshpur","subramanya","mangalore","kannur","|","mangalore","sakleshpura","subramanya","hassan","kunigal","bangalore","|","bangalore","katpadi","chennai","|","bangalore","krishnarajapuram","katpadi","chennai","|","bangalore","dodbalapur","hindupur","anantapur","adoni","solapur","lonavla","mumbai","|","chennai","katpadi","bangalore","mysore","|","bangalore","tumkur","tiptur","ajjampura","ramagiri","davangere","|","mysore","mandya","ramnagar","bangalore"};
+	int len1=sizeof(train1)/sizeof(train1[0]);
+
+	printf("Enter source=");
+	scanf("%s",s);
+	
+	printf("Enter destination=");
+	scanf("%s",d);
+	
+	for(i=0;i<len1;i++){
+		if(strcmp(train1[i],"|")==0){
+			check=0;
+			
+			count_t+=1;
+			cost=0;
+			
+			j=i;
+		}
+		if(strcmp(train1[i],s)==0){
+			check=1;
+		}
+		if(strcmp(train1[i],d)==0 && check==1){
+			cost=i-j;
+		}
+		cost_det[count_t]=cost*50;
+	}
+	for(i=0;i<(sizeof(cost_det)/sizeof(cost_det[0]));i++){
+			if (cost_det[i]!=0){
+				
+				det[count]=cost_det[i];
+				count+=1;
+				switch (i)
+				{
+				case 0:
+					printf("\n%d. Kannur Express\n \tDeparture:9:30pm\tFrom:KSR\t Cost per ticket:%d",count,cost_det[i]);
+					break;
+				case 1:
+					printf("\n%d. Mysore Express\n \tDeparture:7:30pm\tFrom:KSR\t Cost per ticket:%d",count,cost_det[i]);
+					break;
+				case 2:
+					printf("\n%d. Kudla Express\n \tDeparture:10:30pm\tFrom:YSWNT\t Cost per ticket:%d",count,cost_det[i]);
+					break;
+				case 3:
+					printf("\n%d. Gomteshwara Express\n \tDeparture:10:30pm\tFrom:MNGLR\t Cost per ticket:%d",count,cost_det[i]);
+					break;
+				case 4:
+					printf("\n%d. MGR Central Shatabdi\n \tDeparture:10:30pm\tFrom:KSR\t Cost per ticket:%d",count,cost_det[i]);
+					break;
+				case 5:
+					printf("\n%d. Danapur Clone Special\n \tDeparture:8:30am\tFrom:KSR\t Cost per ticket:%d",count,cost_det[i]);
+					break;
+				case 6:
+					printf("\n%d. Udyan Clone Special\n \tDeparture:9:30pm\tFrom:KSR\t Cost per ticket:%d",count,cost_det[i]);
+					break;
+				case 7:
+					printf("\n%d. Mysuru Vande Bharat Express\n \tDeparture:8:30pm\tFrom:MGR\t Cost per ticket:%d",count,cost_det[i]);
+					break;
+				case 8:
+					printf("\n%d. Vishwamanava Express\n \tDeparture:10:30am\tFrom:KSR\t Cost per ticket:%d",count,cost_det[i]);
+					break;
+				case 9:
+					printf("\n%d. SMVT Bengaluru express\n \tDeparture:3:30pm\tFrom:MYSR\t Cost per ticket:%d",count,cost_det[i]);
+					break;
+				}
+				
+			}
+	}
+	if(count==0){
+		printf("No trains found in that route!");
+		return;
+	}
+	printf("\nEnter the train no. to book tickets:");
+	scanf("%d",&train_n);		
+	cost=det[train_n-1];
+	do{
+		printf("Enter number of passengers:");
+		scanf("%d",&num);
+		passdet(num,num1);
+		printf("\nPasssenger Details are:");
+		displaydet(num,num1,0);
+		printf("\nCost for %d passenger:%d",num,cost*num);
+		printf("\nConfirm details: \n1.Yes \n2.No");
+		printf("\nEnter Choice:");
+		scanf("%d",&conf);
+	}
+	while(conf==2);
+	printf("\nTickets successfully booked for :");
+	displaydet(num,num1,1);
+	return num;
+}
+void cancel(int can_p){
+	int len=sizeof(tick)/sizeof(tick[0]);
+	int i,det;
+	for(i=0;i<len;i++){
+		if(can_p==tick[i].PNR){
+			tick[i].status=0;
+			det=i;
+		}
+	}
+	printf("\nSuccessfully canceled ticket for the PNR number:%d",can_p);
+	printf("\nTicket details:");
+	printf("\n\tName: %s\tAge:%d\tGender:%s\tPhone:%lld",tick[det].name,tick[det].age,tick[det].gender,tick[det].phone);
+	
+}
+void check(int can_p){
+	int len=sizeof(tick)/sizeof(tick[0]);
+	int i,det=0;
+	for(i=0;i<len;i++){
+		if(can_p==tick[i].PNR){
+			if (tick[i].status){
+				printf("\nTicket status: BOOKED!");
+				printf("\nTicket details:");
+				printf("\n\tName: %s\tAge:%d\tGender:%s\tPhone:%lld",tick[i].name,tick[i].age,tick[i].gender,tick[i].phone);
+				det=1;
+			}
+			else{
+				det=1;
+				printf("\nTicket status: CANCELLED!");
+			}
+		}
+	}
+	if (det==0){
+		printf("\nTicket not found!!");
+	}
+}
+void main(){
+	int i,j=0;
+	int count=0,num1=0,can_p,choice;
+	do{
+		printf("""\n\n---------------Railway Ticket Booking System------------------\n""");
+		printf("1.Book Tickets\n");
+		printf("2.Cancel Tickets\n");
+		printf("3.Ticket Status\n");
+		printf("4.Exit\n");
+		
+		printf("Enter Your choice:");	
+		scanf("%d",&choice);
+	
+		switch(choice){
+			case 1:
+				num1=book(num1);
+				break;
+			case 2:
+				printf("Enter the unique PNR number of ticket to cancel the ticket:");
+				scanf("%d",&can_p);
+				cancel(can_p);
+				break;
+			case 3:
+				printf("Enter the unique PNR number of ticket to check the ticket status:");
+				scanf("%d",&can_p);
+				check(can_p);
+				break;
+			case 4:
+				break;
+			default:
+				printf("Please enter the correct choice to proceed.");
+				break;
+		}
+	}
+	while(choice!=4);						
+}
